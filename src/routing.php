@@ -1,12 +1,12 @@
 <?php
 
-require __DIR__ . '/controllers/RecipeController.php';
+use App\Controllers\RecipeController;
 
 $urlPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $recipeController = new RecipeController();
 
-match($urlPath) {
+echo match($urlPath) {
     '/' => $recipeController->browse(),
     '/show' => $recipeController->show($_GET['id'] ?? null),
     '/add' => $recipeController->add(),

@@ -1,25 +1,37 @@
 <?php
 
-require __DIR__ . '/../models/RecipeModel.php';
+namespace App\Controllers;
+
+use App\Models\RecipeModel;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 
 class RecipeController
 {
     private $model;
+    private Environment $twig;
 
     public function __construct()
     {
         $this->model = new RecipeModel();
+        $loader = new FilesystemLoader(__DIR__ . '/../Views/');
+        $this->twig = new Environment($loader, [
+            'debug' => true
+        ]);
+        $this->twig->addExtension(new \Twig\Extension\DebugExtension());
     }
 
-    public function browse(): void
+    public function browse(): string
     {
         $recipes = $this->model->getAll();
 
-        require __DIR__ . '/../views/indexRecipe.php';
+        return $this->twig->render('indexRecipe.html.twig', [
+            'recipes' => $recipes
+        ]);
     }
 
-    public function show( ?string $id) : void
+    public function show( ?string $id) : string
     {
         if(!$id){
             header('HTTP/1.1 404 Not Found');
@@ -28,11 +40,13 @@ class RecipeController
 
         $recipe = $this->model->getById($id);
 
-        require __DIR__ . '/../views/showRecipe.php';
+        return $this->twig->render('showRecipe.html.twig', [
+            'recipe' => $recipe
+        ]);
 
     }
 
-    public function add() : void
+    public function add() : string
     {
         $errors = [];
         if ($_SERVER["REQUEST_METHOD"] === 'POST') {
@@ -53,10 +67,12 @@ class RecipeController
                 exit;
             }
         }
-        require __DIR__ . '/../views/form.php';
+        return $this->twig->render('form.html.twig', [
+            'errors' => $errors
+        ]);
     }
 
-    public function modify(?string $id) : void
+    public function modify(?string $id) : string
     {
         $errors = [];
         if ($_SERVER["REQUEST_METHOD"] === 'POST') {
@@ -85,7 +101,11 @@ class RecipeController
 
         $recipe = $this->model->getById($id);
 
-        require __DIR__ . '/../views/form.php';
+        return $this->twig->render('form.html.twig', [
+            'errors' => $errors,
+            'recipe' => $recipe,
+            'id' => $_GET['id']
+        ]);
     }
 
     public function suppress(?string $id) : void

@@ -1,0 +1,16 @@
+<form method="POST">
+    {% if id is defined %}
+        <input type="hidden" name="id" value="{{ id }}" />
+    {% endif %}
+    <label for="title">Votre titre</label>
+    <input type="text" id="title" name="title" required value="{{ recipe ? recipe.title : '' }}" />
+    <label for="description">Votre description</label>
+    <textarea id="description" name="description" required>{{ recipe ? recipe.description : '' }}</textarea>
+    <button type="submit">
+        {% if id is defined %}
+        "Modifier la recette"
+        {% else %}
+        "Ajouter la recette"
+        {% endif %}
+    </button>
+</form>

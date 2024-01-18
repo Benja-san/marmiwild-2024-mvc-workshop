@@ -1,0 +1,17 @@
+{
+  "name": "japan/workshop-php-mvc-1",
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Benja-san",
+      "email": "beugnet.freelance@gmail.com"
+    }
+  ],
+  "require": {
+    "twig/twig": "^3.8"
+  }
+}
